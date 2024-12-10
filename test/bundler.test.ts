@@ -123,6 +123,16 @@ describe("createScssBundler", () => {
     const result = createScssBundler("/root/main.scss");
     expect(result).toBe("$secondary-color: #555;\n$primary-color: #333;");
   });
+
+  it("should skip native Sass modules", () => {
+    vi.spyOn(fs, "readFileSync").mockImplementation((filePath) => {
+      if (filePath === "/root/main.scss") return '@import "sass:color";';
+      return "";
+    });
+
+    const result = createScssBundler("/root/main.scss");
+    expect(result).toBe('@import "sass:color"; // Ignored native Sass module import');
+  });
 });
 
 describe("resolveImportPath", () => {

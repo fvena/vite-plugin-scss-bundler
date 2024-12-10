@@ -17,6 +17,9 @@ function createScssBundler(filePath: string): string {
   return fileContent.replaceAll(
     IMPORT_PATTERN,
     (match, importType: string, importPath: string, namespace: string) => {
+      // Skip native Sass modules
+      if (importPath.startsWith("sass:")) return `${match} // Ignored native Sass module import`;
+
       // Cannot import files with a namespace
       if (importType !== "import" && (!namespace || namespace !== "*")) {
         throw new Error(`${filePath}, cannot import files with a namespace "${match}"`);
