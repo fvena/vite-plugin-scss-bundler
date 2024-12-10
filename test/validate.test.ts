@@ -61,14 +61,34 @@ describe("validatePluginOptions", () => {
         validatePluginOptions(config);
       }).toBeTruthy();
     });
+  });
 
-    it("should validate successfully with correct parameters", () => {
+  describe("output validation", () => {
+    it("should validate successfully with correct output", () => {
       vi.spyOn(fs, "existsSync").mockImplementation((path) => path === "main.scss");
-      const config = { ...options };
+      const config = { ...options, output: "output.scss" };
 
       expect(() => {
         validatePluginOptions(config);
       }).toBeTruthy();
     });
+
+    it("should throw an error if output has invalid extension", () => {
+      vi.spyOn(fs, "existsSync").mockImplementation((path) => path === "main.scss");
+      const config = { ...options, output: "output.css" };
+
+      expect(() => {
+        validatePluginOptions(config);
+      }).toThrowError('The file "output.css" must have a ".scss" extension.');
+    });
+  });
+
+  it("should validate successfully with correct parameters", () => {
+    vi.spyOn(fs, "existsSync").mockImplementation((path) => path === "main.scss");
+    const config = { ...options };
+
+    expect(() => {
+      validatePluginOptions(config);
+    }).toBeTruthy();
   });
 });

@@ -6,6 +6,7 @@ export default defineConfig({
   plugins: [
     scssBundlerPlugin({
       entryFile: "src/styles/main.scss",
+      output: "src/bundled.scss",
     }),
   ],
 });

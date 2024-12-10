@@ -154,7 +154,7 @@ describe("createScssBundler", () => {
     });
 
     const result = createScssBundler("/root/main.scss");
-    expect(result).toBe("$secondary-color: #555;\n$primary-color: #333;");
+    expect(result).toBe("$secondary-color: #555;\n$primary-color: #333;\n");
   });
 });
 

@@ -9,6 +9,7 @@ import type {
 } from "./types";
 
 import { createScssBundler } from "./bundler";
+import { writeFile } from "./file";
 import { validatePluginOptions } from "./validate";
 
 const defaultOptions: DefaultScssBundlerPluginOptions = {
@@ -30,24 +31,24 @@ export default function scssBundlerPlugin(inputOptions: InputScssBundlerPluginOp
     name: "vite-plugin-scss-bundler",
 
     configResolved(resolvedConfig) {
+      const { root } = resolvedConfig;
+
       // Merge input options with defaults
       options = { ...defaultOptions, ...inputOptions };
 
       // Resolve paths
-      if (options.entryFile)
-        options.entryFile = path.resolve(resolvedConfig.root, options.entryFile);
+      if (options.entryFile) options.entryFile = path.resolve(root, options.entryFile);
+      if (options.output) options.output = path.resolve(root, options.output);
 
-      try {
-        validatePluginOptions(options);
-        virtualModuleId = options.virtualName;
-      } catch (error) {
-        console.error(error);
-      }
+      // Validate options
+      validatePluginOptions(options);
+      virtualModuleId = options.virtualName;
     },
 
     buildStart() {
       try {
         scssBundle = createScssBundler(options.entryFile);
+        if (options.output) writeFile(options.output, scssBundle);
       } catch (error) {
         console.error(error);
       }
