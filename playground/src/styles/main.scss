@@ -1,0 +1,10 @@
+@use "base/variables" as *;
+@use "components/button" as *;
+@forward "utils/mixins" as *;
+
+.alert {
+  background-color: $secondary-color;
+  padding: 20px;
+  border-radius: 4px;
+  color: white;
+}
