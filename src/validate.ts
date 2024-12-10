@@ -40,6 +40,16 @@ function validatePluginOptions(options: ScssBundlerPluginOptions) {
   // Validate data
   pathExists(options.entryFile);
   validateExtension(options.entryFile, ".scss");
+  validateVirtualName(options.virtualName);
+
+  return true;
+}
+
+// validate virtualName start with 'virtual:'
+function validateVirtualName(virtualName: string) {
+  if (!virtualName.startsWith("virtual:")) {
+    throw new Error(`The virtualName "${virtualName}" must start with "virtual:"`);
+  }
 
   return true;
 }
