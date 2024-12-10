@@ -9,6 +9,7 @@ vi.mock("fs");
 
 const options: ScssBundlerPluginOptions = {
   entryFile: "src/main.scss",
+  silent: false,
   virtualName: "virtual:my-scss-bundle",
 };
 
@@ -105,8 +106,29 @@ describe("validatePluginOptions", () => {
     });
   });
 
+  describe("silent validation", () => {
+    it("should throw an error if silent is invalid", () => {
+      vi.spyOn(fs, "existsSync").mockImplementation((path) => path === "src/main.scss");
+      const config = { ...options, silent: "off" };
+
+      expect(() => {
+        // @ts-expect-error - testing invalid options
+        validatePluginOptions(config);
+      }).toThrowError("The option must be a boolean.");
+    });
+
+    it("should validate successfully with correct silent", () => {
+      vi.spyOn(fs, "existsSync").mockImplementation((path) => path === "src/main.scss");
+      const config = { ...options, silent: true };
+
+      expect(() => {
+        validatePluginOptions(config);
+      }).toBeTruthy();
+    });
+  });
+
   it("should validate successfully with correct parameters", () => {
-    vi.spyOn(fs, "existsSync").mockImplementation((path) => path === "main.scss");
+    vi.spyOn(fs, "existsSync").mockImplementation((path) => path === "src/main.scss");
     const config = { ...options };
 
     expect(() => {

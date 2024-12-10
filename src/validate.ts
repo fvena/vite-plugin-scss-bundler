@@ -17,7 +17,29 @@ function pathExists(path: string) {
   return true;
 }
 
-// validate the extension of the file
+/**
+ * Validate a boolean option.
+ *
+ * @param option - The option to validate
+ * @returns - True if the option is valid
+ * @throws - If the option is invalid
+ */
+function validateBooleanOption(option: boolean) {
+  if (typeof option !== "boolean") {
+    throw new TypeError(`The option must be a boolean.`);
+  }
+
+  return true;
+}
+
+/**
+ * Validate the file extension.
+ *
+ * @param path - The file path
+ * @param extension - The required extension
+ * @returns - True if the extension is valid
+ * @throws - If the extension is invalid
+ */
 function validateExtension(path: string, extension: string) {
   if (!path.endsWith(extension)) {
     throw new Error(`The file "${path}" must have a "${extension}" extension.`);
@@ -41,6 +63,7 @@ function validatePluginOptions(options: ScssBundlerPluginOptions) {
   pathExists(options.entryFile);
   validateExtension(options.entryFile, ".scss");
   validateVirtualName(options.virtualName);
+  validateBooleanOption(options.silent);
   if (options.output) validateExtension(options.output, ".scss");
   if (options.watchDir) pathExists(options.watchDir);
 

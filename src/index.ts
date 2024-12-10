@@ -10,9 +10,11 @@ import type {
 
 import { createScssBundler, processedFiles } from "./bundler";
 import { writeFile } from "./file";
+import { logError, logSuccess } from "./logger";
 import { validatePluginOptions } from "./validate";
 
 const defaultOptions: DefaultScssBundlerPluginOptions = {
+  silent: false,
   virtualName: "virtual:scss-bundle",
 };
 
@@ -24,6 +26,7 @@ export default function scssBundlerPlugin(inputOptions: InputScssBundlerPluginOp
   let virtualModuleId = "";
   let scssBundle: string;
   let options: ScssBundlerPluginOptions;
+  let root: string;
   const resolvedVirtualModuleId = `\0${virtualModuleId}`;
 
   /* eslint-disable perfectionist/sort-objects */
@@ -31,7 +34,7 @@ export default function scssBundlerPlugin(inputOptions: InputScssBundlerPluginOp
     name: "vite-plugin-scss-bundler",
 
     configResolved(resolvedConfig) {
-      const { root } = resolvedConfig;
+      root = resolvedConfig.root;
 
       // Merge input options with defaults
       options = { ...defaultOptions, ...inputOptions };
@@ -50,8 +53,9 @@ export default function scssBundlerPlugin(inputOptions: InputScssBundlerPluginOp
       try {
         scssBundle = createScssBundler(options.entryFile);
         if (options.output) writeFile(options.output, scssBundle);
+        if (!options.silent) logSuccess("successfully bundled SCSS library.");
       } catch (error) {
-        console.error(error);
+        logError((error as Error).message);
       }
     },
 
@@ -65,8 +69,9 @@ export default function scssBundlerPlugin(inputOptions: InputScssBundlerPluginOp
         processedFiles.clear(); // Clear the cache
         scssBundle = createScssBundler(options.entryFile);
         if (options.output) writeFile(options.output, scssBundle);
+        if (!options.silent) logSuccess(`updated bundle due to: ${file.replace(root, "")}`);
       } catch (error) {
-        console.error(error);
+        logError((error as Error).message);
       }
 
       server.ws.send({ path: "*", type: "full-reload" });
