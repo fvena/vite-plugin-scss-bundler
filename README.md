@@ -31,22 +31,12 @@
 <details open="false">
   <summary><strong>Table of Contents</strong></summary>
   <ol>
-    <li>
-      <a href="#motivation">Motivation</a>
-    </li>
-    <li>
-      <a href="#features">Features</a>
-    </li>
-    <li>
-      <a href="#getting-started">Getting Started</a>
-      <ul>
-        <li><a href="#installation">Installation</a></li>
-        <li><a href="#usage">Usage</a></li>
-      </ul>
-    </li>
-    <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#contributions">Contributions</a></li>
-    <li><a href="#license">License</a></li>
+    <li><a href="#-motivation">Motivation</a></li>
+    <li><a href="#-features">Features</a></li>
+    <li><a href="#getting-started">Getting Started</a></li>
+    <li><a href="#%EF%B8%8F-usage">Usage</a></li>
+    <li><a href="#%EF%B8%8F-configuration">Configuration</a></li>
+    <li><a href="#%EF%B8%8F-roadmap">Roadmap</a></li>
   </ol>
 </details>
 
