@@ -14,6 +14,7 @@ import { logError, logSuccess } from "./logger";
 import { validatePluginOptions } from "./validate";
 
 const defaultOptions: DefaultScssBundlerPluginOptions = {
+  ignoreImports: [],
   silent: false,
   virtualName: "virtual:scss-bundle",
 };
@@ -51,7 +52,7 @@ export default function scssBundlerPlugin(inputOptions: InputScssBundlerPluginOp
 
     buildStart() {
       try {
-        scssBundle = createScssBundler(options.entryFile);
+        scssBundle = createScssBundler(options.entryFile, options.ignoreImports);
         if (options.output) writeFile(options.output, scssBundle);
         if (!options.silent) logSuccess("successfully bundled SCSS library.");
       } catch (error) {
@@ -67,7 +68,7 @@ export default function scssBundlerPlugin(inputOptions: InputScssBundlerPluginOp
 
       try {
         processedFiles.clear(); // Clear the cache
-        scssBundle = createScssBundler(options.entryFile);
+        scssBundle = createScssBundler(options.entryFile, options.ignoreImports);
         if (options.output) writeFile(options.output, scssBundle);
         if (!options.silent) logSuccess(`updated bundle due to: ${file.replace(root, "")}`);
       } catch (error) {

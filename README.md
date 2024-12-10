@@ -129,15 +129,15 @@ This tells TypeScript what to expect when importing the virtual:scss-bundle modu
 
 ## ⚙️ Configuration
 
-| Parameter   | Type     | Description                                                                  | Default             |
-| ----------- | -------- | ---------------------------------------------------------------------------- | ------------------- |
-| watchDir    | string   | Path to the directory to watch for changes library.                          | Required            |
-| entryFile   | string   | Entry file for the SCSS bundle.                                              | Required            |
-| output      | string   | Path to save the bundled SCSS file (optional).                               | null (only virtual) |
-| ignore      | RegExp[] | Regex patterns to exclude files from the bundle.                             | []                  |
-| virtualName | string   | Custom name for the virtual SCSS bundle module.                              | virtual:scss-bundle |
-| minify      | boolean  | Minifies the bundled SCSS code (without compiling to CSS).                   | false               |
-| silent      | boolean  | Suppresses success, info, and warning messages. Errors will always be shown. | false               |
+| Parameter     | Type     | Description                                                                  | Default             |
+| ------------- | -------- | ---------------------------------------------------------------------------- | ------------------- |
+| watchDir      | string   | Path to the directory to watch for changes library.                          | Required            |
+| entryFile     | string   | Entry file for the SCSS bundle.                                              | Required            |
+| output        | string   | Path to save the bundled SCSS file (optional).                               | null (only virtual) |
+| ignoreImports | RegExp[] | Regex patterns to skip specified SCSS imports.                               | []                  |
+| virtualName   | string   | Custom name for the virtual SCSS bundle module.                              | virtual:scss-bundle |
+| minify        | boolean  | Minifies the bundled SCSS code (without compiling to CSS).                   | false               |
+| silent        | boolean  | Suppresses success, info, and warning messages. Errors will always be shown. | false               |
 
 ## 🗺️ Roadmap
 

@@ -64,8 +64,34 @@ function validatePluginOptions(options: ScssBundlerPluginOptions) {
   validateExtension(options.entryFile, ".scss");
   validateVirtualName(options.virtualName);
   validateBooleanOption(options.silent);
+  validateRegexArray(options.ignoreImports);
   if (options.output) validateExtension(options.output, ".scss");
   if (options.watchDir) pathExists(options.watchDir);
+
+  return true;
+}
+
+/**
+ * Validate if an array is an array of regex.
+ *
+ * @param arr - The array to validate
+ * @returns - True if the array is an array of regex
+ * @throws - If an item in the array is not a regex
+ */
+function validateRegexArray(array: unknown[]) {
+  for (const item of array) {
+    if (item instanceof RegExp) continue;
+
+    if (typeof item === "string") {
+      try {
+        new RegExp(item);
+      } catch {
+        throw new Error(`The item "${item}" is not a valid regular expression.`);
+      }
+    } else {
+      throw new TypeError(`The item "${String(item)}" is not a valid regular expression.`);
+    }
+  }
 
   return true;
 }

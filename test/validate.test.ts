@@ -9,6 +9,7 @@ vi.mock("fs");
 
 const options: ScssBundlerPluginOptions = {
   entryFile: "src/main.scss",
+  ignoreImports: [],
   silent: false,
   virtualName: "virtual:my-scss-bundle",
 };
@@ -120,6 +121,27 @@ describe("validatePluginOptions", () => {
     it("should validate successfully with correct silent", () => {
       vi.spyOn(fs, "existsSync").mockImplementation((path) => path === "src/main.scss");
       const config = { ...options, silent: true };
+
+      expect(() => {
+        validatePluginOptions(config);
+      }).toBeTruthy();
+    });
+  });
+
+  describe("ignoreImports validation", () => {
+    it("should throw an error if ignoreImports is invalid", () => {
+      vi.spyOn(fs, "existsSync").mockImplementation((path) => path === "src/main.scss");
+      const config = { ...options, ignoreImports: [6789] };
+
+      expect(() => {
+        // @ts-expect-error - testing invalid options
+        validatePluginOptions(config);
+      }).toThrowError('The item "6789" is not a valid regular expression.');
+    });
+
+    it("should validate successfully with correct ignoreImports", () => {
+      vi.spyOn(fs, "existsSync").mockImplementation((path) => path === "src/main.scss");
+      const config = { ...options, ignoreImports: [/^_/] };
 
       expect(() => {
         validatePluginOptions(config);

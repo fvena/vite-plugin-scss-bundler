@@ -9,9 +9,10 @@ export const processedFiles = new Set<string>();
  * Resolve the content of a SCSS file by embedding its imports.
  *
  * @param filePath - The path of the SCSS file to resolve.
+ * @param ignoreImports - Regex patterns for imports to ignore.
  * @returns The fully resolved SCSS content.
  */
-function createScssBundler(filePath: string): string {
+function createScssBundler(filePath: string, ignoreImports: RegExp[]): string {
   // Skip already processed files
   if (processedFiles.has(filePath)) return "";
   processedFiles.add(filePath);
@@ -25,6 +26,10 @@ function createScssBundler(filePath: string): string {
       // Skip native Sass modules
       if (importPath.startsWith("sass:")) return `${match} // Ignored native Sass module import`;
 
+      // Skip ignored patterns
+      const ignoredPattern = ignoreImports.find((pattern) => pattern.test(importPath));
+      if (ignoredPattern) return `${match} // Ignored by pattern: ${ignoredPattern.toString()}`;
+
       // Cannot import files with a namespace
       if (importType !== "import" && (!namespace || namespace !== "*")) {
         throw new Error(`${filePath}, cannot import files with a namespace "${match}"`);
@@ -32,7 +37,7 @@ function createScssBundler(filePath: string): string {
 
       // Resolve the import path
       const resolvedPath = resolveImportPath(importPath, fileDirectory);
-      return createScssBundler(resolvedPath);
+      return createScssBundler(resolvedPath, ignoreImports);
     },
   );
 }

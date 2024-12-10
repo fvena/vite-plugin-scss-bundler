@@ -22,7 +22,7 @@ describe("createScssBundler", () => {
       return "";
     });
 
-    const result = createScssBundler("/root/main.scss");
+    const result = createScssBundler("/root/main.scss", []);
     expect(result).toBe("$primary-color: #333;");
   });
 
@@ -35,7 +35,7 @@ describe("createScssBundler", () => {
       return "";
     });
 
-    const result = createScssBundler("/root/main.scss");
+    const result = createScssBundler("/root/main.scss", []);
     expect(result).toBe("$primary-color: #333;");
   });
 
@@ -48,7 +48,7 @@ describe("createScssBundler", () => {
       return "";
     });
 
-    const result = createScssBundler("/root/main.scss");
+    const result = createScssBundler("/root/main.scss", []);
     expect(result).toBe("$primary-color: #333;");
   });
 
@@ -62,7 +62,7 @@ describe("createScssBundler", () => {
     });
 
     expect(() => {
-      createScssBundler("/root/main.scss");
+      createScssBundler("/root/main.scss", []);
     }).toThrowError(
       '/root/main.scss, cannot import files with a namespace "@use "variables" as myNamespace;"',
     );
@@ -78,7 +78,7 @@ describe("createScssBundler", () => {
     });
 
     expect(() => {
-      createScssBundler("/root/main.scss");
+      createScssBundler("/root/main.scss", []);
     }).toThrowError('/root/main.scss, cannot import files with a namespace "@use "variables";"');
   });
 
@@ -94,7 +94,7 @@ describe("createScssBundler", () => {
       return "";
     });
 
-    const result = createScssBundler("/root/main.scss");
+    const result = createScssBundler("/root/main.scss", []);
     expect(result).toBe("$secondary-color: #555;\n$primary-color: #333;");
   });
 
@@ -110,7 +110,7 @@ describe("createScssBundler", () => {
       return "";
     });
 
-    const result = createScssBundler("/root/main.scss");
+    const result = createScssBundler("/root/main.scss", []);
     expect(result).toBe("$secondary-color: #555;\n$primary-color: #333;");
   });
 
@@ -127,7 +127,7 @@ describe("createScssBundler", () => {
       return "";
     });
 
-    const result = createScssBundler("/root/main.scss");
+    const result = createScssBundler("/root/main.scss", []);
     expect(result).toBe("$secondary-color: #555;\n$primary-color: #333;");
   });
 
@@ -137,7 +137,7 @@ describe("createScssBundler", () => {
       return "";
     });
 
-    const result = createScssBundler("/root/main.scss");
+    const result = createScssBundler("/root/main.scss", []);
     expect(result).toBe('@import "sass:color"; // Ignored native Sass module import');
   });
 
@@ -153,8 +153,26 @@ describe("createScssBundler", () => {
       return "";
     });
 
-    const result = createScssBundler("/root/main.scss");
+    const result = createScssBundler("/root/main.scss", []);
     expect(result).toBe("$secondary-color: #555;\n$primary-color: #333;\n");
+  });
+
+  it("should ignore imports with a pattern", () => {
+    vi.spyOn(fs, "existsSync").mockImplementation((path) =>
+      ["/root/colors.scss", "/root/variables.scss"].includes(path as string),
+    );
+
+    vi.spyOn(fs, "readFileSync").mockImplementation((filePath) => {
+      if (filePath === "/root/main.scss") return '@use "variables" as *;';
+      if (filePath === "/root/variables.scss") return '@use "colors" as *;\n$primary-color: #333;';
+      if (filePath === "/root/colors.scss") return "$secondary-color: #555;";
+      return "";
+    });
+
+    const result = createScssBundler("/root/main.scss", [/colors/]);
+    expect(result).toBe(
+      '@use "colors" as *; // Ignored by pattern: /colors/\n$primary-color: #333;',
+    );
   });
 });
 
