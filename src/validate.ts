@@ -42,6 +42,7 @@ function validatePluginOptions(options: ScssBundlerPluginOptions) {
   validateExtension(options.entryFile, ".scss");
   validateVirtualName(options.virtualName);
   if (options.output) validateExtension(options.output, ".scss");
+  if (options.watchDir) pathExists(options.watchDir);
 
   return true;
 }

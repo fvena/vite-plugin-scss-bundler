@@ -7,6 +7,7 @@ export default defineConfig({
     scssBundlerPlugin({
       entryFile: "src/styles/main.scss",
       output: "src/bundled.scss",
+      watchDir: "src/styles",
     }),
   ],
 });

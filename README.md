@@ -131,10 +131,9 @@ This tells TypeScript what to expect when importing the virtual:scss-bundle modu
 
 | Parameter   | Type     | Description                                                                  | Default             |
 | ----------- | -------- | ---------------------------------------------------------------------------- | ------------------- |
-| inputDir    | string   | Root directory of the SCSS library.                                          | Required            |
+| watchDir    | string   | Path to the directory to watch for changes library.                          | Required            |
 | entryFile   | string   | Entry file for the SCSS bundle.                                              | Required            |
 | output      | string   | Path to save the bundled SCSS file (optional).                               | null (only virtual) |
-| watch       | boolean  | Enables watch mode to regenerate the bundle on changes.                      | false               |
 | ignore      | RegExp[] | Regex patterns to exclude files from the bundle.                             | []                  |
 | virtualName | string   | Custom name for the virtual SCSS bundle module.                              | virtual:scss-bundle |
 | minify      | boolean  | Minifies the bundled SCSS code (without compiling to CSS).                   | false               |

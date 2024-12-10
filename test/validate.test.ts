@@ -8,7 +8,7 @@ import { validatePluginOptions } from "../src/validate";
 vi.mock("fs");
 
 const options: ScssBundlerPluginOptions = {
-  entryFile: "main.scss",
+  entryFile: "src/main.scss",
   virtualName: "virtual:my-scss-bundle",
 };
 
@@ -34,18 +34,18 @@ describe("validatePluginOptions", () => {
     });
 
     it("should throw an error if entryFile has invalid extension", () => {
-      vi.spyOn(fs, "existsSync").mockImplementation((path) => path === "main.css");
-      const config = { ...options, entryFile: "main.css" };
+      vi.spyOn(fs, "existsSync").mockImplementation((path) => path === "src/main.css");
+      const config = { ...options, entryFile: "src/main.css" };
 
       expect(() => {
         validatePluginOptions(config);
-      }).toThrowError('The file "main.css" must have a ".scss" extension.');
+      }).toThrowError('The file "src/main.css" must have a ".scss" extension.');
     });
   });
 
   describe("virtualName validation", () => {
     it("should throw an error if virtualName is invalid", () => {
-      vi.spyOn(fs, "existsSync").mockImplementation((path) => path === "main.scss");
+      vi.spyOn(fs, "existsSync").mockImplementation((path) => path === "src/main.scss");
       const config = { ...options, virtualName: "invalid" };
 
       expect(() => {
@@ -54,7 +54,7 @@ describe("validatePluginOptions", () => {
     });
 
     it("should validate successfully with correct virtualName", () => {
-      vi.spyOn(fs, "existsSync").mockImplementation((path) => path === "main.scss");
+      vi.spyOn(fs, "existsSync").mockImplementation((path) => path === "src/main.scss");
       const config = { ...options, virtualName: "virtual:my-scss-bundle" };
 
       expect(() => {
@@ -65,7 +65,7 @@ describe("validatePluginOptions", () => {
 
   describe("output validation", () => {
     it("should validate successfully with correct output", () => {
-      vi.spyOn(fs, "existsSync").mockImplementation((path) => path === "main.scss");
+      vi.spyOn(fs, "existsSync").mockImplementation((path) => path === "src/main.scss");
       const config = { ...options, output: "output.scss" };
 
       expect(() => {
@@ -74,12 +74,34 @@ describe("validatePluginOptions", () => {
     });
 
     it("should throw an error if output has invalid extension", () => {
-      vi.spyOn(fs, "existsSync").mockImplementation((path) => path === "main.scss");
+      vi.spyOn(fs, "existsSync").mockImplementation((path) => path === "src/main.scss");
       const config = { ...options, output: "output.css" };
 
       expect(() => {
         validatePluginOptions(config);
       }).toThrowError('The file "output.css" must have a ".scss" extension.');
+    });
+  });
+
+  describe("watchDir validation", () => {
+    it("should throw an error if watchDir not exists", () => {
+      vi.spyOn(fs, "existsSync").mockImplementation((path) => path === "src/main.scss");
+      const config = { ...options, watchDir: "src" };
+
+      expect(() => {
+        validatePluginOptions(config);
+      }).toThrowError('The path "src" does not exist.');
+    });
+
+    it("should validate successfully with correct watchDir", () => {
+      vi.spyOn(fs, "existsSync").mockImplementation((path) =>
+        ["src/main.scss", "src/styles"].includes(path as string),
+      );
+      const config = { ...options, watchDir: "src/styles" };
+
+      expect(() => {
+        validatePluginOptions(config);
+      }).toBeTruthy();
     });
   });
 
