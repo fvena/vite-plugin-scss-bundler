@@ -52,7 +52,12 @@ function resolveImportPath(filePath: string, root: string): string {
       throw new Error(`The imported file "${filePath}" must have a ".scss" or ".css" extension.`);
     }
 
-    return path.isAbsolute(filePath) ? filePath : path.resolve(root, filePath);
+    const absolutePath = path.isAbsolute(filePath) ? filePath : path.resolve(root, filePath);
+
+    if (fs.existsSync(absolutePath)) return absolutePath;
+
+    const partialPath = absolutePath.replace(/\/([^/]+)$/, "/_$1");
+    if (fs.existsSync(partialPath)) return partialPath;
   }
 
   for (const extension of ALLOWED_EXTENSIONS) {
@@ -62,6 +67,9 @@ function resolveImportPath(filePath: string, root: string): string {
       : path.resolve(root, possiblePath);
 
     if (fs.existsSync(absolutePath)) return absolutePath;
+
+    const partialPath = absolutePath.replace(/\/([^/]+)$/, "/_$1");
+    if (fs.existsSync(partialPath)) return partialPath;
   }
 
   throw new Error(`The imported file "${filePath}" not found.`);

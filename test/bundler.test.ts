@@ -171,6 +171,20 @@ describe("resolveImportPath", () => {
     expect(result).toBe("/root/variables.scss");
   });
 
+  it("should resolve the import path with partial", () => {
+    vi.spyOn(fs, "existsSync").mockImplementation((path) => path === "/root/_variables.scss");
+
+    const result = resolveImportPath("variables", "/root");
+    expect(result).toBe("/root/_variables.scss");
+  });
+
+  it("should resolve the import path with partial and extension", () => {
+    vi.spyOn(fs, "existsSync").mockImplementation((path) => path === "/root/_variables.scss");
+
+    const result = resolveImportPath("variables.scss", "/root");
+    expect(result).toBe("/root/_variables.scss");
+  });
+
   it("should throw an error if the imported file not found", () => {
     vi.spyOn(fs, "existsSync").mockReturnValue(false);
 
