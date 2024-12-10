@@ -45,6 +45,36 @@ describe("createScssBundler", () => {
     expect(result).toBe("$primary-color: #333;");
   });
 
+  it("should throw an error if the imported file has a namespace", () => {
+    vi.spyOn(fs, "existsSync").mockImplementation((path) => path === "/root/variables.scss");
+
+    vi.spyOn(fs, "readFileSync").mockImplementation((filePath) => {
+      if (filePath === "/root/main.scss") return '@use "variables" as myNamespace;';
+      if (filePath === "/root/variables.scss") return "$primary-color: #333;";
+      return "";
+    });
+
+    expect(() => {
+      createScssBundler("/root/main.scss");
+    }).toThrowError(
+      '/root/main.scss, cannot import files with a namespace "@use "variables" as myNamespace;"',
+    );
+  });
+
+  it("should throw an error if the imported file hasn't is *", () => {
+    vi.spyOn(fs, "existsSync").mockImplementation((path) => path === "/root/variables.scss");
+
+    vi.spyOn(fs, "readFileSync").mockImplementation((filePath) => {
+      if (filePath === "/root/main.scss") return '@use "variables";';
+      if (filePath === "/root/variables.scss") return "$primary-color: #333;";
+      return "";
+    });
+
+    expect(() => {
+      createScssBundler("/root/main.scss");
+    }).toThrowError('/root/main.scss, cannot import files with a namespace "@use "variables";"');
+  });
+
   it("should resolve the content of a SCSS file with multiple imports", () => {
     vi.spyOn(fs, "existsSync").mockImplementation((path) =>
       ["/root/colors.scss", "/root/variables.scss"].includes(path as string),

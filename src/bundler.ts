@@ -17,7 +17,12 @@ function createScssBundler(filePath: string): string {
   return fileContent.replaceAll(
     IMPORT_PATTERN,
     (match, importType: string, importPath: string, namespace: string) => {
-      console.log(importType, importPath, namespace);
+      // Cannot import files with a namespace
+      if (importType !== "import" && (!namespace || namespace !== "*")) {
+        throw new Error(`${filePath}, cannot import files with a namespace "${match}"`);
+      }
+
+      // Resolve the import path
       const resolvedPath = resolveImportPath(importPath, fileDirectory);
       return createScssBundler(resolvedPath);
     },
