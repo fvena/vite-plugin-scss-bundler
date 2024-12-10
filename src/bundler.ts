@@ -3,6 +3,7 @@ import path from "node:path";
 
 const IMPORT_PATTERN = /@(import|use|forward)\s+["']([^"']+)["'](?:\s+as\s+(\*|\w+))?\s*;?/gi;
 const ALLOWED_EXTENSIONS = new Set(["css", "scss"]);
+export const processedFiles = new Set<string>();
 
 /**
  * Resolve the content of a SCSS file by embedding its imports.
@@ -11,6 +12,10 @@ const ALLOWED_EXTENSIONS = new Set(["css", "scss"]);
  * @returns The fully resolved SCSS content.
  */
 function createScssBundler(filePath: string): string {
+  // Skip already processed files
+  if (processedFiles.has(filePath)) return "";
+  processedFiles.add(filePath);
+
   const fileDirectory = path.dirname(filePath);
   const fileContent = fs.readFileSync(filePath, "utf8");
 

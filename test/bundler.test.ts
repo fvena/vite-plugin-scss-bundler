@@ -1,11 +1,18 @@
 import fs from "node:fs";
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { createScssBundler, resolveImportPath } from "../src/bundler";
+import { createScssBundler, processedFiles, resolveImportPath } from "../src/bundler";
 
 vi.mock("fs");
 
 describe("createScssBundler", () => {
+  beforeEach(() => {
+    // Reinicia los mocks antes de cada prueba
+    vi.restoreAllMocks();
+    vi.clearAllMocks();
+    processedFiles.clear();
+  });
+
   it("should resolve the content of a SCSS file with import", () => {
     vi.spyOn(fs, "existsSync").mockImplementation((path) => path === "/root/variables.scss");
 
@@ -132,6 +139,22 @@ describe("createScssBundler", () => {
 
     const result = createScssBundler("/root/main.scss");
     expect(result).toBe('@import "sass:color"; // Ignored native Sass module import');
+  });
+
+  it("should skip processed files", () => {
+    vi.spyOn(fs, "existsSync").mockImplementation((path) =>
+      ["/root/colors.scss", "/root/variables.scss"].includes(path as string),
+    );
+
+    vi.spyOn(fs, "readFileSync").mockImplementation((filePath) => {
+      if (filePath === "/root/main.scss") return '@use "variables" as *;\n@use "colors" as *';
+      if (filePath === "/root/variables.scss") return '@use "colors" as *;\n$primary-color: #333;';
+      if (filePath === "/root/colors.scss") return "$secondary-color: #555;";
+      return "";
+    });
+
+    const result = createScssBundler("/root/main.scss");
+    expect(result).toBe("$secondary-color: #555;\n$primary-color: #333;");
   });
 });
 
