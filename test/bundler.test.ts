@@ -1,13 +1,11 @@
 import fs from "node:fs";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-
 import { createScssBundler, processedFiles, resolveImportPath } from "../src/bundler";
 
 vi.mock("fs");
 
 describe("createScssBundler", () => {
   beforeEach(() => {
-    // Reinicia los mocks antes de cada prueba
     vi.restoreAllMocks();
     vi.clearAllMocks();
     processedFiles.clear();

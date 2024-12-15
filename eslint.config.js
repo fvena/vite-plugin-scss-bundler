@@ -4,20 +4,8 @@ export default [
   ...eslintNode,
   {
     rules: {
-      "import-x/no-unresolved": [2, { ignore: ["virtual:"] }],
-      "unicorn/prevent-abbreviations": [
-        "error",
-        {
-          replacements: {
-            dir: {
-              directory: false,
-            },
-            env: {
-              environment: false,
-            },
-          },
-        },
-      ],
+      "import/no-unresolved": [2, { ignore: ["virtual:"] }],
+      "security/detect-non-literal-fs-filename": "off",
     },
   },
 ];

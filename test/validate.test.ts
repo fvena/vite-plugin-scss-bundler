@@ -1,8 +1,6 @@
+import type { ScssBundlerPluginOptions } from "../src/types";
 import fs from "node:fs";
 import { describe, expect, it, vi } from "vitest";
-
-import type { ScssBundlerPluginOptions } from "../src/types";
-
 import { validatePluginOptions } from "../src/validate";
 
 vi.mock("fs");

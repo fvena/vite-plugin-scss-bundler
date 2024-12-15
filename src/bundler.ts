@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 
-const IMPORT_PATTERN = /@(import|use|forward)\s+["']([^"']+)["'](?:\s+as\s+(\*|\w+))?\s*;?/gi;
+const IMPORT_PATTERN = /@(import|use|forward)\s+["']([^"']+)["'](?:\s+as\s+(\*|\w+))?\s*;?/gi; // eslint-disable-line security/detect-unsafe-regex -- Safe regex
 const ALLOWED_EXTENSIONS = new Set(["css", "scss"]);
 export const processedFiles = new Set<string>();
 

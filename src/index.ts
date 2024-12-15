@@ -1,13 +1,10 @@
 import type { Plugin } from "vite";
-
-import path from "node:path";
-
 import type {
   DefaultScssBundlerPluginOptions,
   InputScssBundlerPluginOptions,
   ScssBundlerPluginOptions,
 } from "./types";
-
+import path from "node:path";
 import { createScssBundler, processedFiles } from "./bundler";
 import { writeFile } from "./file";
 import { logError, logSuccess } from "./logger";
@@ -30,7 +27,7 @@ export default function scssBundlerPlugin(inputOptions: InputScssBundlerPluginOp
   let root: string;
   const resolvedVirtualModuleId = `\0${virtualModuleId}`;
 
-  /* eslint-disable perfectionist/sort-objects */
+  /* eslint-disable perfectionist/sort-objects -- Disabling sorting to maintain logical grouping of plugin hooks */
   return {
     name: "vite-plugin-scss-bundler",
 
@@ -90,6 +87,6 @@ export default function scssBundlerPlugin(inputOptions: InputScssBundlerPluginOp
       }
       return;
     },
-    /* eslint-enabled perfectionist/sort-objects */
+    /* eslint-enable perfectionist/sort-objects */
   };
 }

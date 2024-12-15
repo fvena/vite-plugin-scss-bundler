@@ -1,6 +1,5 @@
-import fs from "node:fs";
-
 import type { ScssBundlerPluginOptions } from "./types";
+import fs from "node:fs";
 
 /**
  * Validate if the file exists.
@@ -84,7 +83,7 @@ function validateRegexArray(array: unknown[]) {
 
     if (typeof item === "string") {
       try {
-        new RegExp(item);
+        new RegExp(item); // eslint-disable-line security/detect-non-literal-regexp -- Safe regex
       } catch {
         throw new Error(`The item "${item}" is not a valid regular expression.`);
       }
