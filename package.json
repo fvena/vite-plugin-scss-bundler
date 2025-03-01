@@ -64,18 +64,18 @@
   "devDependencies": {
     "@commitlint/cli": "^19.6.1",
     "@commitlint/config-conventional": "^19.6.0",
-    "@release-it/conventional-changelog": "^9.0.3",
-    "@vitest/ui": "^2.1.8",
+    "@release-it/conventional-changelog": "^10.0.0",
+    "@vitest/ui": "^3.0.7",
     "eslint": "^9.17.0",
     "husky": "^9.1.7",
     "lint-staged": "^15.2.11",
     "personal-style-guide": "^0.5.1",
     "prettier": "^3.4.2",
-    "release-it": "^17.10.0",
+    "release-it": "^18.1.2",
     "tsup": "^8.3.5",
     "typescript": "^5.7.2",
     "vite": "^6.0.3",
-    "vitest": "^2.1.8"
+    "vitest": "^3.0.7"
   },
   "peerDependencies": {
     "vite": "^6.0.3"
